@@ -31,7 +31,7 @@ func init() {
 	docs.SwaggerInfo.Title = "Book REST API"
 	docs.SwaggerInfo.Description = "This is REST API Book."
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = utils.Getenv("HOST", "localhost:9090")
+	docs.SwaggerInfo.Host = utils.Getenv("HOST", "localhost") + ":9090"
 	docs.SwaggerInfo.Schemes = []string{"http"}
 
 	db := config.ConnectDataBase()
