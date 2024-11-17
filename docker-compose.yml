@@ -1,0 +1,32 @@
+services:
+  web:
+    build: .
+    ports:
+      - "9090:9090"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: db_dummy_data
+      API_SECRET: rahasiasekali
+      TOKEN_HOUR_LIFESPAN: 24
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db_dummy_data
+    volumes:
+      - db_dummy_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+volumes:
+  db_dummy_data:

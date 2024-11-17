@@ -1,0 +1,1017 @@
+definitions:
+  controllers.LoginInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  controllers.RegisterInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  controllers.bookInput:
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+      price:
+        type: string
+      release_year:
+        maximum: 2021
+        minimum: 1980
+        type: integer
+      title:
+        type: string
+      total_page:
+        type: integer
+    required:
+    - description
+    - image_url
+    - price
+    - release_year
+    - title
+    - total_page
+    type: object
+  controllers.dosenInput:
+    properties:
+      mataKuliahID:
+        type: integer
+      nama:
+        type: string
+    required:
+    - nama
+    type: object
+  controllers.jadwalKuliahInput:
+    properties:
+      dosen_id:
+        type: integer
+      hari:
+        type: string
+      jam_mulai:
+        type: string
+      jam_selesai:
+        type: string
+      mahasiswa_id:
+        type: integer
+    required:
+    - dosen_id
+    - hari
+    - jam_mulai
+    - jam_selesai
+    - mahasiswa_id
+    type: object
+  controllers.mahasiswaInput:
+    properties:
+      nama:
+        type: string
+    required:
+    - nama
+    type: object
+  controllers.mataKuliahInput:
+    properties:
+      nama:
+        type: string
+    required:
+    - nama
+    type: object
+  controllers.nilaiInput:
+    properties:
+      indeks:
+        type: string
+      mahasiswa_id:
+        type: integer
+      mata_kuliah_id:
+        type: integer
+      skor:
+        type: integer
+      user_id:
+        type: integer
+    required:
+    - indeks
+    - mahasiswa_id
+    - mata_kuliah_id
+    - skor
+    - user_id
+    type: object
+  models.Books:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      image_url:
+        type: string
+      price:
+        type: string
+      release_year:
+        type: integer
+      thickness:
+        type: string
+      title:
+        type: string
+      total_page:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  models.Dosen:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      jadwalKuliah:
+        items:
+          $ref: '#/definitions/models.JadwalKuliah'
+        type: array
+      mataKuliahID:
+        type: integer
+      nama:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  models.JadwalKuliah:
+    properties:
+      createdAt:
+        type: string
+      dosenID:
+        type: integer
+      hari:
+        type: string
+      id:
+        type: integer
+      jam_mulai:
+        type: string
+      jam_selesai:
+        type: string
+      mahasiswaID:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  models.Mahasiswa:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      jadwalKuliah:
+        items:
+          $ref: '#/definitions/models.JadwalKuliah'
+        type: array
+      nama:
+        type: string
+      nilai:
+        items:
+          $ref: '#/definitions/models.Nilai'
+        type: array
+      updatedAt:
+        type: string
+    type: object
+  models.MataKuliah:
+    properties:
+      createdAt:
+        type: string
+      dosen:
+        items:
+          $ref: '#/definitions/models.Dosen'
+        type: array
+      id:
+        type: integer
+      nama:
+        type: string
+      nilai:
+        items:
+          $ref: '#/definitions/models.Nilai'
+        type: array
+      updatedAt:
+        type: string
+    type: object
+  models.Nilai:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      indeks:
+        type: string
+      mahasiswaID:
+        type: integer
+      mataKuliahID:
+        type: integer
+      skor:
+        type: integer
+      updatedAt:
+        type: string
+      userID:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      role:
+        type: string
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /auth/me:
+    get:
+      description: Get Current User by token.
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      security:
+      - BearerToken: []
+      summary: Get Current User by token.
+      tags:
+      - Auth
+  /books:
+    get:
+      description: Get a list of books.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Books'
+            type: array
+      summary: Get all books.
+      tags:
+      - book
+    post:
+      description: Creating a new book.
+      parameters:
+      - description: the body to create a new book
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.bookInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Books'
+      security:
+      - BearerToken: []
+      summary: Create New book.
+      tags:
+      - book
+  /books/{id}:
+    delete:
+      description: Delete a book by id.
+      parameters:
+      - description: book id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: Delete one book.
+      tags:
+      - book
+    get:
+      description: Get a book by id.
+      parameters:
+      - description: book id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Books'
+      summary: Get book.
+      tags:
+      - book
+    patch:
+      description: Update book by id.
+      parameters:
+      - description: book id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: the body to update an book
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.bookInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Books'
+      security:
+      - BearerToken: []
+      summary: Update book.
+      tags:
+      - book
+  /dosen:
+    get:
+      description: Get a list of dosen.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Dosen'
+            type: array
+      summary: Get all Dosen.
+      tags:
+      - dosen
+    post:
+      description: Creating a new dosen.
+      parameters:
+      - description: the body to create a new dosen
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.dosenInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Dosen'
+      security:
+      - BearerToken: []
+      summary: Create New dosen.
+      tags:
+      - dosen
+  /dosen/{id}:
+    delete:
+      description: Delete a dosen by id.
+      parameters:
+      - description: dosen id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: Delete one dosen.
+      tags:
+      - dosen
+    get:
+      description: Get a dosen by id.
+      parameters:
+      - description: dosen id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Dosen'
+      summary: Get dosen.
+      tags:
+      - dosen
+    patch:
+      description: Update dosen by id.
+      parameters:
+      - description: dosen id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: the body to update an dosen
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.dosenInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Dosen'
+      security:
+      - BearerToken: []
+      summary: Update dosen.
+      tags:
+      - dosen
+  /jadwal-kuliah:
+    get:
+      description: Get a list of jadwalKuliah.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.JadwalKuliah'
+            type: array
+      summary: Get all jadwalKuliah.
+      tags:
+      - jadwal kuliah
+    post:
+      description: Creating a new jadwalKuliah.
+      parameters:
+      - description: the body to create a new jadwalKuliah
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.jadwalKuliahInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.JadwalKuliah'
+      security:
+      - BearerToken: []
+      summary: Create New jadwalKuliah.
+      tags:
+      - jadwal kuliah
+  /jadwal-kuliah/{id}:
+    delete:
+      description: Delete a jadwalKuliah by id.
+      parameters:
+      - description: jadwalKuliah id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: Delete one jadwalKuliah.
+      tags:
+      - jadwal kuliah
+    get:
+      description: Get a jadwalKuliah by id.
+      parameters:
+      - description: jadwalKuliah id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.JadwalKuliah'
+      summary: Get jadwalKuliah.
+      tags:
+      - jadwal kuliah
+    patch:
+      description: Update jadwalKuliah by id.
+      parameters:
+      - description: jadwalKuliah id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: the body to update an jadwalKuliah
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.jadwalKuliahInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.JadwalKuliah'
+      security:
+      - BearerToken: []
+      summary: Update jadwalKuliah.
+      tags:
+      - jadwal kuliah
+  /login:
+    post:
+      description: Logging in to get jwt token to access admin or user api by roles.
+      parameters:
+      - description: the body to login a user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login as as user.
+      tags:
+      - Auth
+  /mahasiswa:
+    get:
+      description: Get a list of mahasiswa.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Mahasiswa'
+            type: array
+      summary: Get all Mahasiswa.
+      tags:
+      - mahasiswa
+    post:
+      description: Creating a new mahasiswa.
+      parameters:
+      - description: the body to create a new mahasiswa
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.mahasiswaInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Mahasiswa'
+      security:
+      - BearerToken: []
+      summary: Create New mahasiswa.
+      tags:
+      - mahasiswa
+  /mahasiswa/{id}:
+    delete:
+      description: Delete a mahasiswa by id.
+      parameters:
+      - description: mahasiswa id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: Delete one mahasiswa.
+      tags:
+      - mahasiswa
+    get:
+      description: Get a mahasiswa by id.
+      parameters:
+      - description: mahasiswa id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Mahasiswa'
+      summary: Get mahasiswa.
+      tags:
+      - mahasiswa
+    patch:
+      description: Update mahasiswa by id.
+      parameters:
+      - description: mahasiswa id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: the body to update an mahasiswa
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.mahasiswaInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Mahasiswa'
+      security:
+      - BearerToken: []
+      summary: Update mahasiswa.
+      tags:
+      - mahasiswa
+  /mata-kuliah:
+    get:
+      description: Get a list of mataKuliah.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.MataKuliah'
+            type: array
+      summary: Get all mataKuliah.
+      tags:
+      - mata kuliah
+    post:
+      description: Creating a new mataKuliah.
+      parameters:
+      - description: the body to create a new mataKuliah
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.mataKuliahInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.MataKuliah'
+      security:
+      - BearerToken: []
+      summary: Create New mataKuliah.
+      tags:
+      - mata kuliah
+  /mata-kuliah/{id}:
+    delete:
+      description: Delete a mataKuliah by id.
+      parameters:
+      - description: mataKuliah id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: Delete one mataKuliah.
+      tags:
+      - mata kuliah
+    get:
+      description: Get a mataKuliah by id.
+      parameters:
+      - description: mataKuliah id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MataKuliah'
+      summary: Get mataKuliah.
+      tags:
+      - mata kuliah
+    patch:
+      description: Update mataKuliah by id.
+      parameters:
+      - description: mataKuliah id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: the body to update an mataKuliah
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.mataKuliahInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.MataKuliah'
+      security:
+      - BearerToken: []
+      summary: Update mataKuliah.
+      tags:
+      - mata kuliah
+  /nilai:
+    get:
+      description: Get a list of nilai.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Nilai'
+            type: array
+      summary: Get all nilai.
+      tags:
+      - nilai
+    post:
+      description: Creating a new nilai.
+      parameters:
+      - description: the body to create a new nilai
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.nilaiInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Nilai'
+      security:
+      - BearerToken: []
+      summary: Create New nilai.
+      tags:
+      - nilai
+  /nilai/{id}:
+    delete:
+      description: Delete a nilai by id.
+      parameters:
+      - description: nilai id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: Delete one nilai.
+      tags:
+      - nilai
+    get:
+      description: Get a nilai by id.
+      parameters:
+      - description: nilai id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Nilai'
+      summary: Get nilai.
+      tags:
+      - nilai
+    patch:
+      description: Update nilai by id.
+      parameters:
+      - description: nilai id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: the body to update an nilai
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.nilaiInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Nilai'
+      security:
+      - BearerToken: []
+      summary: Update nilai.
+      tags:
+      - nilai
+  /register:
+    post:
+      description: registering a user from public access.
+      parameters:
+      - description: the body to register a user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register a user.
+      tags:
+      - Auth
+swagger: "2.0"
