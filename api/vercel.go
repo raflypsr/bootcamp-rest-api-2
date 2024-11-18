@@ -29,7 +29,7 @@ func init() {
 	}
 
 	docs.SwaggerInfo.Title = "Dummy Data REST API"
-	docs.SwaggerInfo.Description = "user bisa get book, get mahasiswa, get matakuliah, getdosen, getnilai, getjadwalkuliah, "
+	docs.SwaggerInfo.Description = "user can get book, get mahasiswa, get mata-kuliah, get dosen, get nilai, get jadwal-kuliah, "
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Host = utils.Getenv("HOST", "localhost") + ":9090"
 	docs.SwaggerInfo.Schemes = []string{"http"}
