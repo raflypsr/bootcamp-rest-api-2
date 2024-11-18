@@ -28,8 +28,8 @@ func init() {
 		}
 	}
 
-	docs.SwaggerInfo.Title = "Book REST API"
-	docs.SwaggerInfo.Description = "This is REST API Book."
+	docs.SwaggerInfo.Title = "Dummy Data REST API"
+	docs.SwaggerInfo.Description = "user bisa get book, get mahasiswa, get matakuliah, getdosen, getnilai, getjadwalkuliah, "
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Host = utils.Getenv("HOST", "localhost") + ":9090"
 	docs.SwaggerInfo.Schemes = []string{"http"}
